@@ -1,0 +1,7 @@
+type LocalState {
+  currentFoo: Foo
+}
+
+extend type Query {
+  localState: LocalState
+}

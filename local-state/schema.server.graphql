@@ -1,0 +1,93 @@
+enum AllowedBarChildEntityType {
+  BAZ
+}
+
+enum AllowedFooChildEntityType {
+  BAR
+  BAZ
+}
+
+type Bar implements Entity & Node {
+  id: ID!
+  uuid: String!
+  name: String!
+  type: EntityType!
+  entities(types: [AllowedBarChildEntityType!], first: Int): EntityConnection
+}
+
+type Baz implements Entity & Node {
+  id: ID!
+  uuid: String!
+  name: String!
+  type: EntityType!
+}
+
+interface Entity {
+  id: ID!
+  uuid: String!
+  name: String!
+  type: EntityType!
+}
+
+"""A connection to a list of items."""
+type EntityConnection {
+  """A list of edges."""
+  edges: [EntityEdge]
+
+  """A list of nodes."""
+  nodes: [Entity]
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Identifies the total count of items in the connection."""
+  totalCount: Int!
+}
+
+type EntityEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Entity
+}
+
+enum EntityType {
+  FOO
+  BAR
+  BAZ
+}
+
+type Foo implements Entity & Node {
+  id: ID!
+  uuid: String!
+  name: String!
+  type: EntityType!
+  entities(types: [AllowedFooChildEntityType!], first: Int): EntityConnection
+}
+
+interface Node {
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+type Query {
+  node(id: ID!): Node
+  entities(types: [EntityType!], first: Int): EntityConnection
+  primaryFoo: Foo!
+}
+
