@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/sorenhoyer/react-relay-examples/master/local-state/Capture.PNG)
+![alt text](https://raw.githubusercontent.com/sorenhoyer/react-relay-examples/master/local-state/screenshot.PNG)
 
 The purpose of this is trying to initialize primaryFoo (remote) to currentFoo (local) so that it behaves just like if it was a remove Foo. Meaning you can query it exactly like you would if it was not local. And from anywhere in the App.
 
