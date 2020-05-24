@@ -11,26 +11,24 @@ const Root = () => {
             margin: 0;
             padding: 0;
           }
-        
+
           *,
           *:before,
           *:after {
             box-sizing: inherit;
           }
-        
+
           html {
             box-sizing: border-box;
             font-family: sans-serif;
             font-size: 16px;
-          }
-        
-          body {
-            min-height: 100%;
+            height: 100%;
             width: 100%;
           }
 
           html,
-          #root,
+          body,
+          #root {
             height: 100%;
             width: 100%;
           }

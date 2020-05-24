@@ -2,7 +2,6 @@ import { css } from '@emotion/core';
 import graphql from 'babel-plugin-relay/macro';
 import React from 'react';
 import { useLazyLoadQuery } from 'react-relay/hooks';
-import Main from './Main';
 import Navigation from './Navigation/Navigation';
 
 function App() {
@@ -42,6 +41,7 @@ function App() {
       grid-template-areas: "navigation main";
       grid-template-columns: 10rem auto;
       grid-template-rows: 100%;
+      min-height: 100%;
     `}>
       <Navigation 
         styles={css`
@@ -50,7 +50,21 @@ function App() {
         `} 
         data={data}
       />
-      <Main />
+      <main
+        css={css`
+          grid-area: main; 
+          background: rgba(112, 161, 215, 1); 
+          padding: 1rem;
+        `}
+      >
+        <a
+          href="https://github.com/sorenhoyer/react-relay-examples/blob/master/local-state/README.md"
+          // eslint-disable-next-line react/jsx-no-target-blank
+          target="_blank"
+        >
+          README.md
+        </a>
+      </main>
     </div>
   );
 }
