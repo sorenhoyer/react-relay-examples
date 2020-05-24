@@ -8,6 +8,21 @@ import Navigation from './Navigation/Navigation';
 function App() {
   const data = useLazyLoadQuery(graphql`
     query AppQuery {
+      primaryFoo @__clientField(handle: "currentFoo") {
+        id
+        uuid
+        name
+        entities(first: 9999, types: [BAR, BAZ]) {
+          totalCount
+          edges {
+            node {
+              id
+              uuid
+              name
+            }
+          }
+        }
+      }
       ...Navigation_data
     }
   `, {});

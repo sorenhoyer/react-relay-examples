@@ -1,5 +1,6 @@
-import { commitLocalUpdate, Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { commitLocalUpdate, ConnectionHandler, Environment, Network, RecordSource, Store } from 'relay-runtime';
 import fetchGraphQL from './fetchGraphQL';
+import CurrentFooHandler from './handlers/CurrentFoo';
 
 // Relay passes a "params" object with the query name and text. So we define a helper function
 // to call our fetchGraphQL utility with params.text.
@@ -8,10 +9,21 @@ async function fetchRelay(params, variables) {
   return fetchGraphQL(params.text, variables);
 }
 
+const handlerProvider = (handle) => {
+  switch (handle) {
+    case 'currentFoo':
+      return CurrentFooHandler;
+    case 'connection':
+      return ConnectionHandler;
+    default:
+      throw new Error(`Handler for ${handle} not found.`);
+  }
+};
 
 
 // Export a singleton instance of Relay Environment configured with our network function:
 const environment = new Environment({
+  handlerProvider,
   network: Network.create(fetchRelay),
   store: new Store(new RecordSource(), {
     // This property tells Relay to not immediately clear its cache when the user
