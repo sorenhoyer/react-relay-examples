@@ -9,9 +9,27 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type Navigation_data$ref = any;
+export type EntityType = "BAR" | "BAZ" | "FOO" | "%future added value";
 export type AppQueryVariables = {||};
 export type AppQueryResponse = {|
-  +$fragmentRefs: Navigation_data$ref
+  +primaryFoo: {|
+    +id: string,
+    +uuid: string,
+    +name: string,
+    +type: EntityType,
+    +entities: ?{|
+      +totalCount: number,
+      +edges: ?$ReadOnlyArray<?{|
+        +node: ?{|
+          +id: string,
+          +uuid: string,
+          +name: string,
+          +type: EntityType,
+        |}
+      |}>,
+    |},
+  |},
+  +$fragmentRefs: Navigation_data$ref,
 |};
 export type AppQuery = {|
   variables: AppQueryVariables,
@@ -22,6 +40,24 @@ export type AppQuery = {|
 
 /*
 query AppQuery {
+  primaryFoo {
+    id
+    uuid
+    name
+    type
+    entities(first: 9999999, types: [BAR, BAZ]) {
+      totalCount
+      edges {
+        node {
+          __typename
+          id
+          uuid
+          name
+          type
+        }
+      }
+    }
+  }
   ...Navigation_data
 }
 
@@ -41,37 +77,103 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "totalCount",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "uuid",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uuid",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "type",
   "storageKey": null
 },
-v4 = {
+v4 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 9999999
+  },
+  {
+    "kind": "Literal",
+    "name": "types",
+    "value": [
+      "BAR",
+      "BAZ"
+    ]
+  }
+],
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "totalCount",
   "storageKey": null
-};
+},
+v6 = [
+  (v0/*: any*/),
+  (v1/*: any*/),
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "alias": null,
+    "args": (v4/*: any*/),
+    "concreteType": "EntityConnection",
+    "kind": "LinkedField",
+    "name": "entities",
+    "plural": false,
+    "selections": [
+      (v5/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "EntityEdge",
+        "kind": "LinkedField",
+        "name": "edges",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": null,
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              (v0/*: any*/),
+              (v1/*: any*/),
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -79,6 +181,59 @@ return {
     "metadata": null,
     "name": "AppQuery",
     "selections": [
+      {
+        "alias": "primaryFoo",
+        "args": null,
+        "concreteType": "Foo",
+        "kind": "LinkedField",
+        "name": "__primaryFoo_currentFoo",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": (v4/*: any*/),
+            "concreteType": "EntityConnection",
+            "kind": "LinkedField",
+            "name": "entities",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "EntityEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": null,
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/),
+                      (v1/*: any*/),
+                      (v2/*: any*/),
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+          }
+        ],
+        "storageKey": null
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -93,6 +248,25 @@ return {
     "kind": "Operation",
     "name": "AppQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Foo",
+        "kind": "LinkedField",
+        "name": "primaryFoo",
+        "plural": false,
+        "selections": (v6/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "filters": null,
+        "handle": "currentFoo",
+        "key": "",
+        "kind": "LinkedHandle",
+        "name": "primaryFoo"
+      },
       {
         "alias": "fooCount",
         "args": [
@@ -114,7 +288,7 @@ return {
         "name": "entities",
         "plural": false,
         "selections": [
-          (v0/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": "entities(first:2,types:[\"FOO\"])"
       },
@@ -136,66 +310,7 @@ return {
                 "kind": "LinkedField",
                 "name": "currentFoo",
                 "plural": false,
-                "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": [
-                      {
-                        "kind": "Literal",
-                        "name": "types",
-                        "value": [
-                          "BAR",
-                          "BAZ"
-                        ]
-                      }
-                    ],
-                    "concreteType": "EntityConnection",
-                    "kind": "LinkedField",
-                    "name": "entities",
-                    "plural": false,
-                    "selections": [
-                      (v0/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "EntityEdge",
-                        "kind": "LinkedField",
-                        "name": "edges",
-                        "plural": true,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": null,
-                            "kind": "LinkedField",
-                            "name": "node",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "__typename",
-                                "storageKey": null
-                              },
-                              (v1/*: any*/),
-                              (v2/*: any*/),
-                              (v3/*: any*/),
-                              (v4/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
-                  }
-                ],
+                "selections": (v6/*: any*/),
                 "storageKey": null
               }
             ],
@@ -210,11 +325,11 @@ return {
     "metadata": {},
     "name": "AppQuery",
     "operationKind": "query",
-    "text": "query AppQuery {\n  ...Navigation_data\n}\n\nfragment MainNavigation_fooCount on EntityConnection {\n  totalCount\n}\n\nfragment Navigation_data on Query {\n  fooCount: entities(first: 2, types: [FOO]) {\n    ...MainNavigation_fooCount\n  }\n}\n"
+    "text": "query AppQuery {\n  primaryFoo {\n    id\n    uuid\n    name\n    type\n    entities(first: 9999999, types: [BAR, BAZ]) {\n      totalCount\n      edges {\n        node {\n          __typename\n          id\n          uuid\n          name\n          type\n        }\n      }\n    }\n  }\n  ...Navigation_data\n}\n\nfragment MainNavigation_fooCount on EntityConnection {\n  totalCount\n}\n\nfragment Navigation_data on Query {\n  fooCount: entities(first: 2, types: [FOO]) {\n    ...MainNavigation_fooCount\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'acee50923710664eef54a0e220aa828e';
+(node/*: any*/).hash = '7b66a5fff4feb8c33c911c6cf9121c2e';
 
 module.exports = node;

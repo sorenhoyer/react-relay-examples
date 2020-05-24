@@ -24,10 +24,13 @@ const Root = () => {
             font-size: 16px;
           }
         
+          body {
+            min-height: 100%;
+            width: 100%;
+          }
+
           html,
-          body,
           #root,
-          #app {
             height: 100%;
             width: 100%;
           }

@@ -18,6 +18,17 @@ export type FooSwitcherQueryResponse = {|
         +uuid: string,
         +name: string,
         +type: EntityType,
+        +entities?: ?{|
+          +totalCount: number,
+          +edges: ?$ReadOnlyArray<?{|
+            +node: ?{|
+              +id: string,
+              +uuid: string,
+              +name: string,
+              +type: EntityType,
+            |}
+          |}>,
+        |},
       |}
     |}>
   |}
@@ -39,6 +50,20 @@ query FooSwitcherQuery {
         uuid
         name
         type
+        ... on Foo {
+          entities(first: 9999999, types: [BAR, BAZ]) {
+            totalCount
+            edges {
+              node {
+                __typename
+                id
+                uuid
+                name
+                type
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -82,6 +107,35 @@ v4 = {
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
+},
+v5 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 9999999
+  },
+  {
+    "kind": "Literal",
+    "name": "types",
+    "value": [
+      "BAR",
+      "BAZ"
+    ]
+  }
+],
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "totalCount",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -117,7 +171,51 @@ return {
                   (v1/*: any*/),
                   (v2/*: any*/),
                   (v3/*: any*/),
-                  (v4/*: any*/)
+                  (v4/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": (v5/*: any*/),
+                        "concreteType": "EntityConnection",
+                        "kind": "LinkedField",
+                        "name": "entities",
+                        "plural": false,
+                        "selections": [
+                          (v6/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "EntityEdge",
+                            "kind": "LinkedField",
+                            "name": "edges",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": null,
+                                "kind": "LinkedField",
+                                "name": "node",
+                                "plural": false,
+                                "selections": [
+                                  (v1/*: any*/),
+                                  (v2/*: any*/),
+                                  (v3/*: any*/),
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+                      }
+                    ],
+                    "type": "Foo"
+                  }
                 ],
                 "storageKey": null
               }
@@ -160,17 +258,56 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
+                  (v7/*: any*/),
                   (v1/*: any*/),
                   (v2/*: any*/),
                   (v3/*: any*/),
-                  (v4/*: any*/)
+                  (v4/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": (v5/*: any*/),
+                        "concreteType": "EntityConnection",
+                        "kind": "LinkedField",
+                        "name": "entities",
+                        "plural": false,
+                        "selections": [
+                          (v6/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "EntityEdge",
+                            "kind": "LinkedField",
+                            "name": "edges",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": null,
+                                "kind": "LinkedField",
+                                "name": "node",
+                                "plural": false,
+                                "selections": [
+                                  (v7/*: any*/),
+                                  (v1/*: any*/),
+                                  (v2/*: any*/),
+                                  (v3/*: any*/),
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+                      }
+                    ],
+                    "type": "Foo"
+                  }
                 ],
                 "storageKey": null
               }
@@ -187,11 +324,11 @@ return {
     "metadata": {},
     "name": "FooSwitcherQuery",
     "operationKind": "query",
-    "text": "query FooSwitcherQuery {\n  entities(types: [FOO]) {\n    edges {\n      node {\n        __typename\n        id\n        uuid\n        name\n        type\n      }\n    }\n  }\n}\n"
+    "text": "query FooSwitcherQuery {\n  entities(types: [FOO]) {\n    edges {\n      node {\n        __typename\n        id\n        uuid\n        name\n        type\n        ... on Foo {\n          entities(first: 9999999, types: [BAR, BAZ]) {\n            totalCount\n            edges {\n              node {\n                __typename\n                id\n                uuid\n                name\n                type\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '12fa6667ce03fc00b4143d764a93e27a';
+(node/*: any*/).hash = '421a145642cfb79d4f050fcf60cf5ec8';
 
 module.exports = node;

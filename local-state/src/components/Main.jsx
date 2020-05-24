@@ -42,47 +42,189 @@ const Main = () => {
       `}
     >
       <section>
-        <h1>How it should work</h1>
+        <h1>How it works</h1>
         <ul>
           <li>
-            <input type="checkbox" />
-            <label>"currentFoo" should be automatically initialized to the value of "primaryFoo" on page load/refresh ("primaryFoo" should only setting "currentFoo" initially - nothing else!)</label>
+            -
+            <label>currentFoo should be automatically initialized to the value of primaryFoo on page load/refresh (primaryFoo should only setting currentFoo initially - nothing else!)</label>
           </li>
           <li>
-            <input type="checkbox" />
-            <label>"currentFoo" should always be fully updated (complete with all fields) when changing "currentFoo" from "FooSwitcher" (verify with console, that no fields are omitted)</label>
+            -
+            <label>If currentFoo has only 1 entity of Bar or Baz it should not pop out the SubNavigation when you click "entities" but navigate directly to it (routing is deliberately left out for this example, since that is not important). If there are more than 1 entities of type Bar or Baz, the SubNavigation should pop open</label>
           </li>
           <li>
-            <input type="checkbox" />
-            <label>"currentFoo" should behave just like any other record of type Foo from the server schema and not be limited to certain pre-defined combination of query args. If you ask for currentFoo in a query or fragment, all fields should be available</label>
+            -
+            <label>You can switch currentFoo by selecting a Foo in the FooSwitcher component, which is both available from the MainNavigation and SubNavigation</label>
+          </li>
+          <li>
+            -
+            <label>currentFoo should behave just like any other record of type Foo from the server schema and not be limited to certain pre-defined combination of query args. If you ask for currentFoo in a query or fragment, all fields should be available - it should not only be stored under the exact query signature that it was fetched with when it got stored initially - there has to be some flexibility so we can query it like if it was the primaryFoo from the remote / server schema</label>
           </li>
         </ul>
       </section>
       <hr/>
       <section>
-        <h1>Challenges and things to pay attention to</h1> 
+        <h1>Hacks I had to make to make this "work" and the limitations that comes</h1> 
+        <br/>
+        <h3>The first thing you will notice is in AppQuery</h3>
+        <pre>
+          <code>
+{`query AppQuery {
+  primaryFoo @__clientField(handle: "currentFoo") {
+    id
+    uuid
+    name
+    type
+    entities(first: 9999999, types: [BAR, BAZ]) {
+      totalCount
+      edges {
+        node {
+          id
+          uuid
+          name
+          type
+        }
+      }
+    }
+  }
+}`}
+          </code>
+        </pre>
+        <br/>
+        <h4>Problems:</h4>
         <ul>
           <li>
             -
-            <label>Find a way to initialize currentFoo to the value of primaryFoo on first page load / refresh. I've struggled a lot with this with __clientField, custom handlers and commitLocalUpdate and inline fragment, but found no acceptable solutions that made currentFoo work consistently</label>
+            <label>This component has no direct requirement for primaryFoo, so this seems really awkward just to initialize currentFoo to primaryFoo</label>
           </li>
           <li>
             -
-            <label>In MainNavigation.jsx line 55 <code>const barBazCount = 2; // currentFoo?.entities?.totalCount;`</code> there's a temporary HACK to make the SubNavigation pop out always (instead of only when there are more than 1 Bar or Baz, which will never be the case until currentFoo is working correctly). It should work without it of course</label>
+            <label>Also currentFoo is stored with a key signature matching the exact query, so it needs to include all fields and can only be fetched by including all fields, and by using the exact same connection parameters.</label>
           </li>
           <li>
             -
-            <label>Notice currentFoo is initially undefined. When you click Foo1, Foo2 or Foo3 in FooSwitcher "currentFoo" will rerender, but if you look closely in console you can see that only the id and name fields are returned. This is a problem.</label>
-          </li>
-          <li>
-            -
-            <label>There should be entities of type Bar and Baz rendering in a list in SubNavigation, but it doesn't because currentFoo.entities is undefined</label>
-          </li>
-          <li>
-            -
-            <label>Keep the console open and look for errors and undefined</label>
+            <label>This makes it very in-flexible and impossible to only request a subset of currentFoo in other Queries or Fragments and impossible to do paging over the entities connection in the SubNavigation component</label>
           </li>
         </ul>
+        <br/>
+        <br/>
+        <br/>
+        <h3>The next big problem is in SubNavigation</h3>
+        <pre>
+          <code>
+{`query SubNavigationQuery {
+  primaryFoo {
+    __typename
+  }
+  localState {
+    currentFoo {
+      id
+      uuid
+      name
+      type
+      entities(first: 9999999, types: [BAR, BAZ]) {
+        totalCount
+        edges {
+          node {
+            id
+            uuid
+            name
+            type
+          }
+        }
+      }
+    }
+  }
+}`}
+          </code>
+        </pre>
+        <br/>
+        <h4>Problems:</h4>
+        <ul>
+          <li>
+            -
+            <label>You need to include something in the query that is not local state, which is the reason for primaryFoo.__typename</label>
+          </li>
+          <li>
+            -
+            <label>The ideal query would be something like:
+              <pre>
+                <code>
+{`query SubNavigationQuery {
+    localState {
+    currentFoo {
+      name
+      entities(first: 10, types: [BAR, BAZ]) @connection(key: "SubNavigation_entities") {
+        totalCount
+        edges {
+          node {
+            uuid
+            name
+          }
+          }
+        }
+      }
+    }
+  }
+}`}
+                </code>
+              </pre>
+            </label>
+          </li>
+          <li>
+            -
+            <label>This makes it very in-flexible and impossible to only request a subset of currentFoo in other Queries or Fragments and impossible to do paging over the entities connection in the SubNavigation component</label>
+          </li>
+        </ul>
+        <br/>
+        <br/>
+        <br/>
+        <h3>Likewise in FooSwitcher</h3>
+        <pre>
+          <code>
+{`query FooSwitcherQuery {
+  entities(types: [FOO]) {
+    edges {
+      node {
+        id
+        uuid
+        name
+        type
+        ... on Foo {
+          entities(first: 9999999, types: [BAR, BAZ]) {
+            totalCount
+            edges {
+              node {
+                id
+                uuid
+                name
+                type
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`}
+          </code>
+        </pre>
+        <br/>
+        <p>Where instead it should just be:</p>
+        <pre>
+          <code>
+{`query FooSwitcherQuery {
+  entities(types: [FOO]) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}`}
+          </code>
+        </pre>
       </section>
     </main>
   );

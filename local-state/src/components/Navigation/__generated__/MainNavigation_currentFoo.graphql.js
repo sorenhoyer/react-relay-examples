@@ -83,6 +83,11 @@ return {
       "args": [
         {
           "kind": "Literal",
+          "name": "first",
+          "value": 9999999
+        },
+        {
+          "kind": "Literal",
           "name": "types",
           "value": [
             "BAR",
@@ -129,13 +134,13 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
+      "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
     }
   ],
   "type": "Foo"
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'b869388815b6a3f3cc744b24b58a9d2f';
+(node/*: any*/).hash = 'a96b5fce9b0e7838f517e7cad4cead0e';
 
 module.exports = node;

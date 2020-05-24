@@ -10,23 +10,37 @@ const SubNavigation = (props) => {
     graphql`
       query SubNavigationQuery {
         # Hmm for some reason I need to have something here that is not just local state
-        primaryFoo { # I guess I just need to have it here for some reason
+        primaryFoo {
           __typename
         }
         localState {
-          currentFoo{
+          currentFoo {
+            # What I really just wanted to get was this:
+            # name
+            # entities(first: 10, types: [BAR, BAZ]) @connection(key: "SubNavigation_entities") {
+            #   totalCount
+            #   edges {
+            #     node {
+            #       uuid
+            #       name
+            #     }
+            #   }
+            # }
+            # But since the localState.currentFoo is stored like like it is queried,
+            # it has to match the query in FooSwitcher 1:1
             id
+            uuid
             name
-            ... on Foo {
-              # TODO pagination
-              entities(first: 10, types: [BAR, BAZ]) @connection(key: "SubNavigation_entities") {
-                totalCount
-                edges {
-                  node {
-                    id
-                    uuid
-                    name
-                  }
+            type
+            # I guess there is no way to add @connection and first: 10 to do pagination?
+            entities(first: 9999999, types: [BAR, BAZ]) {
+              totalCount
+              edges {
+                node {
+                  id
+                  uuid
+                  name
+                  type
                 }
               }
             }
@@ -71,13 +85,11 @@ const SubNavigation = (props) => {
         <p>If currentFoo.entities is not undefined you will see a list of bars and bazzes below.</p>
         {
           nodes.filter(Boolean)?.map(n => (
-            <a href={`entities/${n?.uuid}`} key={n?.uuid} >
-              <div >
-                <div>
-                  <span>{n?.name}</span>
-                  <span>&gt;</span>
-                </div>
-              </div>
+            <a
+              key={n?.uuid}
+              href={`entities/${n?.uuid}`}
+            >
+              {n?.name}
             </a>
           ))
         }

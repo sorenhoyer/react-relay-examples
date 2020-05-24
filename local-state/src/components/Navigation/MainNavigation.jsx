@@ -13,16 +13,14 @@ const MainNavigation = (props) => {
       uuid
       name
       type
-      ... on Foo {
-        entities(types: [BAR, BAZ]) {
-          totalCount
-          edges {
-            node {
-              id
-              uuid
-              name
-              type
-            }
+      entities(first: 9999999, types: [BAR, BAZ]) {
+        totalCount
+        edges {
+          node {
+            id
+            uuid
+            name
+            type
           }
         }
       }
@@ -50,9 +48,7 @@ const MainNavigation = (props) => {
     .map(edge => edge?.node)
     .filter(Boolean);
 
-  // HACK TO MAKE THE SUBNAVIGATION POP OUT
-  // SHOULD WORK WITH COMMENTED IN CODE
-  const barBazCount = 2; // currentFoo?.entities?.totalCount;
+  const barBazCount = currentFoo?.entities?.totalCount;
 
   console.log(barBazzes);
   console.log(barBazCount)

@@ -10,10 +10,28 @@ const FooSwitcher = () => {
       entities(types: [FOO]) {
         edges {
           node {
+            # Because the fields and connection params need to match the ones in AppQuery 1:1, since that is the key currentFoo is store under in the store, it has to look like this
+            # But ideally it should only include the following fields 2 fields; id and name
+            # id
+            # name
             id
             uuid
             name
             type
+            ... on Foo {
+              entities(first: 9999999, types: [BAR, BAZ]) {
+                totalCount
+                edges {
+                  node {
+                    id
+                    uuid
+                    name
+                    type
+                  }
+                }
+              }
+            }
+            
           }
         }
       }
