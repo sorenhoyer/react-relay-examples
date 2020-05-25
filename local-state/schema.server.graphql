@@ -86,6 +86,7 @@ type PageInfo {
 }
 
 type Query {
+  hello: String
   node(id: ID!): Node
   entities(types: [EntityType!], first: Int): EntityConnection
   primaryFoo: Foo!

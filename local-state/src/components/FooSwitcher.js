@@ -19,7 +19,7 @@ const FooSwitcher = () => {
             name
             type
             ... on Foo {
-              entities(first: 9999999, types: [BAR, BAZ]) {
+              entities(types: [BAR, BAZ]) {
                 totalCount
                 edges {
                   node {

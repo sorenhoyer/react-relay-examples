@@ -9,18 +9,12 @@ const MainNavigation = (props) => {
 
   const currentFoo = useFragment(graphql`
     fragment MainNavigation_currentFoo on Foo {
-      id
-      uuid
       name
-      type
-      entities(first: 9999999, types: [BAR, BAZ]) {
+      entities(types: [BAR, BAZ]) {
         totalCount
         edges {
           node {
-            id
             uuid
-            name
-            type
           }
         }
       }

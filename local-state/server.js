@@ -199,6 +199,8 @@ var typeDefs = /* buildSchema( */`
   }
   
   type Query {
+    hello: String
+
     node(id: ID!): Node
 
     entities(
@@ -213,6 +215,9 @@ var typeDefs = /* buildSchema( */`
 // The root provides a resolver function for each API endpoint
 var resolvers = {
   Query: {
+    hello: () => {
+      return 'Hello world!';
+    },
     node: (parent, args, context) => {
       const { type: __typeName, id } = fromGlobalId(args.id);
   

@@ -8,23 +8,16 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
-export type EntityType = "BAR" | "BAZ" | "FOO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type MainNavigation_currentFoo$ref: FragmentReference;
 declare export opaque type MainNavigation_currentFoo$fragmentType: MainNavigation_currentFoo$ref;
 export type MainNavigation_currentFoo = {|
-  +id: string,
-  +uuid: string,
   +name: string,
-  +type: EntityType,
   +entities: ?{|
     +totalCount: number,
     +edges: ?$ReadOnlyArray<?{|
       +node: ?{|
-        +id: string,
-        +uuid: string,
-        +name: string,
-        +type: EntityType,
+        +uuid: string
       |}
     |}>,
   |},
@@ -39,53 +32,22 @@ export type MainNavigation_currentFoo$key = {
 */
 
 
-const node/*: ReaderFragment*/ = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uuid",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-};
-return {
+const node/*: ReaderFragment*/ = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "MainNavigation_currentFoo",
   "selections": [
-    (v0/*: any*/),
-    (v1/*: any*/),
-    (v2/*: any*/),
-    (v3/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 9999999
-        },
         {
           "kind": "Literal",
           "name": "types",
@@ -123,10 +85,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/),
-                (v2/*: any*/),
-                (v3/*: any*/)
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "uuid",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             }
@@ -134,13 +99,12 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+      "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
     }
   ],
   "type": "Foo"
 };
-})();
 // prettier-ignore
-(node/*: any*/).hash = 'a96b5fce9b0e7838f517e7cad4cead0e';
+(node/*: any*/).hash = '30764cd99202d8b460956a31110e2830';
 
 module.exports = node;

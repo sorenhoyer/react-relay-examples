@@ -8,26 +8,18 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type EntityType = "BAR" | "BAZ" | "FOO" | "%future added value";
 export type SubNavigationQueryVariables = {||};
 export type SubNavigationQueryResponse = {|
-  +primaryFoo: {|
-    +__typename: string
-  |},
+  +hello: ?string,
   +localState: ?{|
     +currentFoo: ?{|
-      +id: string,
-      +uuid: string,
       +name: string,
-      +type: EntityType,
       +entities: ?{|
         +totalCount: number,
         +edges: ?$ReadOnlyArray<?{|
           +node: ?{|
-            +id: string,
             +uuid: string,
             +name: string,
-            +type: EntityType,
           |}
         |}>,
       |},
@@ -43,10 +35,7 @@ export type SubNavigationQuery = {|
 
 /*
 query SubNavigationQuery {
-  primaryFoo {
-    __typename
-    id
-  }
+  hello
 }
 */
 
@@ -55,43 +44,17 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "hello",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uuid",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v5 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 9999999
-  },
+v2 = [
   {
     "kind": "Literal",
     "name": "types",
@@ -101,11 +64,25 @@ v5 = [
     ]
   }
 ],
-v6 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uuid",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -115,18 +92,7 @@ return {
     "metadata": null,
     "name": "SubNavigationQuery",
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Foo",
-        "kind": "LinkedField",
-        "name": "primaryFoo",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/)
-        ],
-        "storageKey": null
-      },
+      (v0/*: any*/),
       {
         "kind": "ClientExtension",
         "selections": [
@@ -147,18 +113,15 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
-                    "args": (v5/*: any*/),
+                    "args": (v2/*: any*/),
                     "concreteType": "EntityConnection",
                     "kind": "LinkedField",
                     "name": "entities",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -175,10 +138,8 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
-                              (v1/*: any*/),
-                              (v2/*: any*/),
-                              (v3/*: any*/),
-                              (v4/*: any*/)
+                              (v4/*: any*/),
+                              (v1/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -186,7 +147,7 @@ return {
                         "storageKey": null
                       }
                     ],
-                    "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+                    "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
                   }
                 ],
                 "storageKey": null
@@ -205,19 +166,7 @@ return {
     "kind": "Operation",
     "name": "SubNavigationQuery",
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Foo",
-        "kind": "LinkedField",
-        "name": "primaryFoo",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/)
-        ],
-        "storageKey": null
-      },
+      (v0/*: any*/),
       {
         "kind": "ClientExtension",
         "selections": [
@@ -238,18 +187,15 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
-                    "args": (v5/*: any*/),
+                    "args": (v2/*: any*/),
                     "concreteType": "EntityConnection",
                     "kind": "LinkedField",
                     "name": "entities",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -266,11 +212,16 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
-                              (v0/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "__typename",
+                                "storageKey": null
+                              },
+                              (v4/*: any*/),
                               (v1/*: any*/),
-                              (v2/*: any*/),
-                              (v3/*: any*/),
-                              (v4/*: any*/)
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -278,8 +229,9 @@ return {
                         "storageKey": null
                       }
                     ],
-                    "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
-                  }
+                    "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
+                  },
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -295,11 +247,11 @@ return {
     "metadata": {},
     "name": "SubNavigationQuery",
     "operationKind": "query",
-    "text": "query SubNavigationQuery {\n  primaryFoo {\n    __typename\n    id\n  }\n}\n"
+    "text": "query SubNavigationQuery {\n  hello\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '671646aca1d44948869b584fe5dcb165';
+(node/*: any*/).hash = '4fa506d5480909c85cd6817cd087a5f4';
 
 module.exports = node;

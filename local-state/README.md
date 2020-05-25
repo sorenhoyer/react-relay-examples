@@ -4,15 +4,13 @@
 
 The purpose of this is trying to initialize currentFoo (local) with the value of primaryFoo (remote), so that currentFoo behaves just like if it was a remote Foo. Meaning you can query it exactly like you would if it was not local. And from anywhere in the App.
 
-So it should be possible to pick one or many fields from currentFoo just like it is possible for primaryFoo.
-
 ```
 # primaryFoo {
 #   id
 #   uuid
 #   name
 #   type
-#   entities(first: 9999, types: [BAR, BAZ]) {
+#   entities(types: [BAR, BAZ]) {
 #     totalCount
 #     edges {
 #       node {
@@ -26,9 +24,9 @@ So it should be possible to pick one or many fields from currentFoo just like it
 # }
 ```
 
-Unfortunately right now there's a lot of problems, since Relay indexes Records with the full signature of the query/fragment leaving no room for dynamic queries on records in a db, even if it has an underlying graphql object type from the server schema: 
+Since Relay indexes Records with the full connection signature and parameters of the query/fragment it seems to be quite cumbesome to have eg. connections with differrent signatures, since those are not stored in the cache initially. It also goes against the Relay philosophy to query for more data than you need in a component, but this is necessary in AppQuery and FooSwitcher, to include all fields the "application" needs (not what the component needs).
 
-I made a few workarounds to just make it "work" for demo purposes but as you will see they have great limitations and the solution right now is very bad and I seek advice on how to do this in a proper way with Relay. I suspect that Relay might not be mature enough yet to handle local data things such as these.
+I made a few workarounds to just make it "work" for demo purposes but as you will see they have great limitations and the solution right now is very bad and I seek advice on how to do this in a proper way with Relay. I suspect that Relay might not be mature enough yet to handle local data things such as these, but please prove my fears wrong and send a PR, or create an issue and share your ideas and we can try them out :D.
 
 ## How it should work
 
@@ -48,7 +46,7 @@ query AppQuery {
     uuid
     name
     type
-    entities(first: 9999999, types: [BAR, BAZ]) {
+    entities(types: [BAR, BAZ]) {
       totalCount
       edges {
         node {
@@ -66,30 +64,24 @@ query AppQuery {
 #### Problems
 
 * This component has no direct requirement for primaryFoo, so this seems really awkward just to initialize currentFoo to primaryFoo
-* Also currentFoo is stored with a key signature matching the exact query, so it needs to include all fields and can only be fetched by including all fields, and by using the exact same connection parameters.
-* This makes it very in-flexible and impossible to only request a subset of currentFoo in other Queries or Fragments and impossible to do paging over the entities connection in the SubNavigation component
+* Also currentFoo is stored with a key signature matching the exact parameters (and directives if there were any), and it needs to include all fields for them to get saved.
+* It can only be fetched by including all fields with the exact same parameters (and directives if there were any).
+* This makes it very in-flexible and impossible to do paging over the entities connection in the SubNavigation component where a @connection directive and first pareter would be needed, but is simply not possible to add, without some very very nasty hacks in handler functions.
 
 ### The next big problem is in SubNavigation
 
 ```graphql
 query SubNavigationQuery {
-  primaryFoo {
-    __typename
-  }
+  hello
   localState {
     currentFoo {
-      id
-      uuid
       name
-      type
-      entities(first: 9999999, types: [BAR, BAZ]) {
+      entities(types: [BAR, BAZ]) { # PROBLEM
         totalCount
         edges {
           node {
-            id
             uuid
             name
-            type
           }
         }
       }
@@ -100,11 +92,11 @@ query SubNavigationQuery {
 
 #### Problems
 
-* You need to include something in the query that is not local state, which is the reason for primaryFoo.__typename
+* You need to include something in the query that is not local state, which is the reason for including the hello field. This is not a big problem, but still something I hope gets fixed.
 * The ideal query would be something like: 
 ```graphql
 query SubNavigationQuery {
-    localState {
+  localState {
     currentFoo {
       name
       entities(first: 10, types: [BAR, BAZ]) @connection(key: "SubNavigation_entities") {
@@ -114,16 +106,15 @@ query SubNavigationQuery {
             uuid
             name
           }
-          }
         }
       }
     }
   }
 }
 ```
-* This makes it very in-flexible and impossible to only request a subset of currentFoo in other Queries or Fragments and impossible to do paging over the entities connection in the SubNavigation component
+* I guess there is no way to add @connection and first: 10 to do pagination, since that is not how entities are stored in AppQuery and FooSwitcherQuery
 
-### Likewise in FooSwitcher
+### FooSwitcherQuery needs the exact signature and to include all fields as well
 
 ```graphql
 query FooSwitcherQuery {
@@ -135,7 +126,7 @@ query FooSwitcherQuery {
         name
         type
         ... on Foo {
-          entities(first: 9999999, types: [BAR, BAZ]) {
+          entities(types: [BAR, BAZ]) {
             totalCount
             edges {
               node {

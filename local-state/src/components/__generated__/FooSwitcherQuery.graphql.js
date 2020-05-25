@@ -51,7 +51,7 @@ query FooSwitcherQuery {
         name
         type
         ... on Foo {
-          entities(first: 9999999, types: [BAR, BAZ]) {
+          entities(types: [BAR, BAZ]) {
             totalCount
             edges {
               node {
@@ -109,11 +109,6 @@ v4 = {
   "storageKey": null
 },
 v5 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 9999999
-  },
   {
     "kind": "Literal",
     "name": "types",
@@ -211,7 +206,7 @@ return {
                             "storageKey": null
                           }
                         ],
-                        "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+                        "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
                       }
                     ],
                     "type": "Foo"
@@ -303,7 +298,7 @@ return {
                             "storageKey": null
                           }
                         ],
-                        "storageKey": "entities(first:9999999,types:[\"BAR\",\"BAZ\"])"
+                        "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
                       }
                     ],
                     "type": "Foo"
@@ -324,11 +319,11 @@ return {
     "metadata": {},
     "name": "FooSwitcherQuery",
     "operationKind": "query",
-    "text": "query FooSwitcherQuery {\n  entities(types: [FOO]) {\n    edges {\n      node {\n        __typename\n        id\n        uuid\n        name\n        type\n        ... on Foo {\n          entities(first: 9999999, types: [BAR, BAZ]) {\n            totalCount\n            edges {\n              node {\n                __typename\n                id\n                uuid\n                name\n                type\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query FooSwitcherQuery {\n  entities(types: [FOO]) {\n    edges {\n      node {\n        __typename\n        id\n        uuid\n        name\n        type\n        ... on Foo {\n          entities(types: [BAR, BAZ]) {\n            totalCount\n            edges {\n              node {\n                __typename\n                id\n                uuid\n                name\n                type\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '421a145642cfb79d4f050fcf60cf5ec8';
+(node/*: any*/).hash = '20381cd7e0f4efb00d4563bb308cf326';
 
 module.exports = node;
