@@ -1,6 +1,6 @@
 import { css, Global } from '@emotion/core';
 import React from 'react';
-import App from './App'
+import App from './App';
 
 const Root = () => {
   return (

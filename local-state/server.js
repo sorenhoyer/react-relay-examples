@@ -259,7 +259,10 @@ var resolvers = {
     },
     primaryFoo: (parent, args, context, info) => entitiesData.find(item => item.id === context.me.primaryFoo)
   },
-
+  Node: {
+    // eslint-disable-next-line no-underscore-dangle
+    __resolveType: (parent) => parent.__typeName,
+  },
   EntityType: {
     FOO: '5e5474f6-6c13-48ed-8202-d19ed1209857',
     BAR: '30302b5d-8902-40ee-8a84-4380176ee6a3',

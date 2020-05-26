@@ -1,6 +1,5 @@
 import { commitLocalUpdate, ConnectionHandler, Environment, Network, RecordSource, Store } from 'relay-runtime';
 import fetchGraphQL from './fetchGraphQL';
-import CurrentFooHandler from './handlers/CurrentFoo';
 
 // Relay passes a "params" object with the query name and text. So we define a helper function
 // to call our fetchGraphQL utility with params.text.
@@ -11,8 +10,6 @@ async function fetchRelay(params, variables) {
 
 const handlerProvider = (handle) => {
   switch (handle) {
-    case 'currentFoo':
-      return CurrentFooHandler;
     case 'connection':
       return ConnectionHandler;
     default:
@@ -44,10 +41,7 @@ commitLocalUpdate(environment, store => {
   const dataID = `client:root:${fieldKey}`; // try __typename
 
   const record = store.create(dataID, __typename);
-  const record2 = store.create(`client:root:${fieldKey}:currentFoo`, 'Foo');
-
-  record2.setValue(null, 'currentFoo');
-  record.setLinkedRecord(record2, 'currentFoo');
+  record.setValue(null, 'currentFoo');
 
   store.getRoot().setLinkedRecord(record, 'localState');
 });

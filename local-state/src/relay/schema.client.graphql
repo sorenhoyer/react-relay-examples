@@ -1,5 +1,5 @@
 type LocalState {
-  currentFoo: Foo
+  currentFoo: String
 }
 
 extend type Query {

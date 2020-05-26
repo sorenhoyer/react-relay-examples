@@ -9,27 +9,11 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type Navigation_data$ref = any;
-export type EntityType = "BAR" | "BAZ" | "FOO" | "%future added value";
-export type AppQueryVariables = {||};
+export type AppQueryVariables = {|
+  currentFooId: string
+|};
 export type AppQueryResponse = {|
-  +primaryFoo: {|
-    +id: string,
-    +uuid: string,
-    +name: string,
-    +type: EntityType,
-    +entities: ?{|
-      +totalCount: number,
-      +edges: ?$ReadOnlyArray<?{|
-        +node: ?{|
-          +id: string,
-          +uuid: string,
-          +name: string,
-          +type: EntityType,
-        |}
-      |}>,
-    |},
-  |},
-  +$fragmentRefs: Navigation_data$ref,
+  +$fragmentRefs: Navigation_data$ref
 |};
 export type AppQuery = {|
   variables: AppQueryVariables,
@@ -39,33 +23,36 @@ export type AppQuery = {|
 
 
 /*
-query AppQuery {
-  primaryFoo {
-    id
-    uuid
-    name
-    type
-    entities(types: [BAR, BAZ]) {
-      totalCount
-      edges {
-        node {
-          __typename
-          id
-          uuid
-          name
-          type
-        }
+query AppQuery(
+  $currentFooId: ID!
+) {
+  ...Navigation_data_3GaHFW
+}
+
+fragment MainNavigation_currentFoo on Foo {
+  name
+  entities(types: [BAR, BAZ]) {
+    totalCount
+    edges {
+      node {
+        __typename
+        uuid
+        id
       }
     }
   }
-  ...Navigation_data
 }
 
 fragment MainNavigation_fooCount on EntityConnection {
   totalCount
 }
 
-fragment Navigation_data on Query {
+fragment Navigation_data_3GaHFW on Query {
+  node(id: $currentFooId) {
+    __typename
+    ...MainNavigation_currentFoo
+    id
+  }
   fooCount: entities(first: 2, types: [FOO]) {
     ...MainNavigation_fooCount
   }
@@ -73,120 +60,50 @@ fragment Navigation_data on Query {
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "currentFooId",
+    "type": "ID!"
+  }
+],
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uuid",
+  "name": "__typename",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v4 = [
-  {
-    "kind": "Literal",
-    "name": "types",
-    "value": [
-      "BAR",
-      "BAZ"
-    ]
-  }
-],
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "totalCount",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
   "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "AppQuery",
     "selections": [
       {
-        "alias": "primaryFoo",
-        "args": null,
-        "concreteType": "Foo",
-        "kind": "LinkedField",
-        "name": "__primaryFoo_currentFoo",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v2/*: any*/),
-          (v3/*: any*/),
+        "args": [
           {
-            "alias": null,
-            "args": (v4/*: any*/),
-            "concreteType": "EntityConnection",
-            "kind": "LinkedField",
-            "name": "entities",
-            "plural": false,
-            "selections": [
-              (v5/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "EntityEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": null,
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v0/*: any*/),
-                      (v1/*: any*/),
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
+            "kind": "Variable",
+            "name": "currentFooId",
+            "variableName": "currentFooId"
           }
         ],
-        "storageKey": null
-      },
-      {
-        "args": null,
         "kind": "FragmentSpread",
         "name": "Navigation_data"
       }
@@ -195,72 +112,93 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "AppQuery",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Foo",
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "currentFooId"
+          }
+        ],
+        "concreteType": null,
         "kind": "LinkedField",
-        "name": "primaryFoo",
+        "name": "node",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
           {
-            "alias": null,
-            "args": (v4/*: any*/),
-            "concreteType": "EntityConnection",
-            "kind": "LinkedField",
-            "name": "entities",
-            "plural": false,
+            "kind": "InlineFragment",
             "selections": [
-              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "EntityEdge",
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": [
+                  {
+                    "kind": "Literal",
+                    "name": "types",
+                    "value": [
+                      "BAR",
+                      "BAZ"
+                    ]
+                  }
+                ],
+                "concreteType": "EntityConnection",
                 "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
+                "name": "entities",
+                "plural": false,
                 "selections": [
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": null,
+                    "concreteType": "EntityEdge",
                     "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
+                    "name": "edges",
+                    "plural": true,
                     "selections": [
-                      (v6/*: any*/),
-                      (v0/*: any*/),
-                      (v1/*: any*/),
-                      (v2/*: any*/),
-                      (v3/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": null,
+                        "kind": "LinkedField",
+                        "name": "node",
+                        "plural": false,
+                        "selections": [
+                          (v1/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "uuid",
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
                 ],
-                "storageKey": null
+                "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
               }
             ],
-            "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
+            "type": "Foo"
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "filters": null,
-        "handle": "currentFoo",
-        "key": "",
-        "kind": "LinkedHandle",
-        "name": "primaryFoo"
       },
       {
         "alias": "fooCount",
@@ -283,75 +221,9 @@ return {
         "name": "entities",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": "entities(first:2,types:[\"FOO\"])"
-      },
-      {
-        "kind": "ClientExtension",
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "LocalState",
-            "kind": "LinkedField",
-            "name": "localState",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Foo",
-                "kind": "LinkedField",
-                "name": "currentFoo",
-                "plural": false,
-                "selections": [
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": (v4/*: any*/),
-                    "concreteType": "EntityConnection",
-                    "kind": "LinkedField",
-                    "name": "entities",
-                    "plural": false,
-                    "selections": [
-                      (v5/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "EntityEdge",
-                        "kind": "LinkedField",
-                        "name": "edges",
-                        "plural": true,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": null,
-                            "kind": "LinkedField",
-                            "name": "node",
-                            "plural": false,
-                            "selections": [
-                              (v6/*: any*/),
-                              (v1/*: any*/),
-                              (v0/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": "entities(types:[\"BAR\",\"BAZ\"])"
-                  },
-                  (v0/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ]
       }
     ]
   },
@@ -360,11 +232,11 @@ return {
     "metadata": {},
     "name": "AppQuery",
     "operationKind": "query",
-    "text": "query AppQuery {\n  primaryFoo {\n    id\n    uuid\n    name\n    type\n    entities(types: [BAR, BAZ]) {\n      totalCount\n      edges {\n        node {\n          __typename\n          id\n          uuid\n          name\n          type\n        }\n      }\n    }\n  }\n  ...Navigation_data\n}\n\nfragment MainNavigation_fooCount on EntityConnection {\n  totalCount\n}\n\nfragment Navigation_data on Query {\n  fooCount: entities(first: 2, types: [FOO]) {\n    ...MainNavigation_fooCount\n  }\n}\n"
+    "text": "query AppQuery(\n  $currentFooId: ID!\n) {\n  ...Navigation_data_3GaHFW\n}\n\nfragment MainNavigation_currentFoo on Foo {\n  name\n  entities(types: [BAR, BAZ]) {\n    totalCount\n    edges {\n      node {\n        __typename\n        uuid\n        id\n      }\n    }\n  }\n}\n\nfragment MainNavigation_fooCount on EntityConnection {\n  totalCount\n}\n\nfragment Navigation_data_3GaHFW on Query {\n  node(id: $currentFooId) {\n    __typename\n    ...MainNavigation_currentFoo\n    id\n  }\n  fooCount: entities(first: 2, types: [FOO]) {\n    ...MainNavigation_fooCount\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '6c84faba14bd3542ad650ffb2f8c70e1';
+(node/*: any*/).hash = 'daa5bb810833c60fc199d047d32fe13b';
 
 module.exports = node;

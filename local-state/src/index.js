@@ -4,13 +4,16 @@ import ReactDOM from 'react-dom';
 import Root from './components/Root';
 import RelayEnvironment from './relay/RelayEnvironment';
 import * as serviceWorker from './serviceWorker';
+import { CurrentFooProvider } from './providers/CurrentFooProvider'; 
 
 ReactDOM.unstable_createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RelayEnvironmentProvider environment={RelayEnvironment}>
-      <Suspense fallback={'Loading...'}>
-        <Root />
-      </Suspense>
+      <CurrentFooProvider>
+        <Suspense fallback={'Loading...'}>
+          <Root />
+        </Suspense>
+      </CurrentFooProvider>
     </RelayEnvironmentProvider>
   </React.StrictMode>
 );

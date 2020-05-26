@@ -1,35 +1,21 @@
 import { css } from '@emotion/core';
 import graphql from 'babel-plugin-relay/macro';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useLazyLoadQuery } from 'react-relay/hooks';
 import Navigation from './Navigation/Navigation';
+import { CurrentFooContext } from '../providers/CurrentFooProvider'; 
 
 function App() {
+  const { currentFooId } = useContext(CurrentFooContext);
+
+  console.log(currentFooId)
   const data = useLazyLoadQuery(graphql`
-    query AppQuery {
-      # This component has no direct requirement for primaryFoo, so this seems really awkward just to initialize currentFoo to primaryFoo
-      # Also currentFoo is stored with a key signature matching the exact query, so it needs to include all fields and can only be fetched by including all fields, and by using the exact same connection parameters.
-      # This makes it very in-flexible and impossible to only request a subset of currentFoo in other Queries or Fragments and impossible to do paging over the entities connection in the SubNavigation component
-      primaryFoo @__clientField(handle: "currentFoo") {
-        id
-        uuid
-        name
-        type
-        entities(types: [BAR, BAZ]) {
-          totalCount
-          edges {
-            node {
-              id
-              uuid
-              name
-              type
-            }
-          }
-        }
-      }
-      ...Navigation_data
+    query AppQuery($currentFooId: ID!) {
+      ...Navigation_data @arguments(currentFooId: $currentFooId)
     }
-  `, {});
+  `, {
+    currentFooId: currentFooId
+  });
 
   console.log(data);
 

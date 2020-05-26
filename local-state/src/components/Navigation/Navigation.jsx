@@ -11,12 +11,12 @@ const Navigation = (props) => {
   const toggleShowSubNavigation = () => setShowSubNavigation(!showSubNavigation);
 
   const data = useFragment(graphql`
-    fragment Navigation_data on Query {
-      localState {
-        currentFoo {
-          ...MainNavigation_currentFoo
-        }
+    fragment Navigation_data on Query
+      @argumentDefinitions(currentFooId: {type: "ID!"}) {
+      node(id: $currentFooId) {
+        ...MainNavigation_currentFoo
       }
+
       fooCount: entities(first: 2, types: [FOO]) {
         ...MainNavigation_fooCount
       }
@@ -35,7 +35,7 @@ const Navigation = (props) => {
           z-index: 1000;
           position: absolute;
         `}
-        currentFoo={data.localState.currentFoo} 
+        currentFoo={data.node} 
         fooCount={data.fooCount} 
         toggleShowSubNavigation={toggleShowSubNavigation}
       />
