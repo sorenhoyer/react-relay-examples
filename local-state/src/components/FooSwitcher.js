@@ -1,37 +1,20 @@
 import { css } from '@emotion/core';
 import { graphql } from 'babel-plugin-relay/macro';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useLazyLoadQuery } from 'react-relay/hooks';
-import updateFoo from '../relay/mutations/updateFoo';
+import { CurrentFooContext } from '../providers/CurrentFooProvider'; 
 
 const FooSwitcher = () => {
+  const { setCurrentFooId } = useContext(CurrentFooContext);
   const data = useLazyLoadQuery(graphql`
     query FooSwitcherQuery {
       entities(types: [FOO]) {
         edges {
           node {
-            # Because the fields and connection params need to match the ones in AppQuery 1:1, since that is the key currentFoo is store under in the store, it has to look like this
-            # But ideally it should only include the following fields 2 fields; id and name
-            # id
-            # name
-            id
-            uuid
-            name
-            type
             ... on Foo {
-              entities(types: [BAR, BAZ]) {
-                totalCount
-                edges {
-                  node {
-                    id
-                    uuid
-                    name
-                    type
-                  }
-                }
-              }
+              id
+              name
             }
-            
           }
         }
       }
@@ -68,7 +51,7 @@ const FooSwitcher = () => {
             key={node.id}
             type="button" 
             onClick={(e) => {
-              updateFoo(node?.id)
+              setCurrentFooId(node?.id)
             }} 
           >
             {node.name}

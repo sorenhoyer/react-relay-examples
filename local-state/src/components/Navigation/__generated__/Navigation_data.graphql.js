@@ -14,10 +14,8 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type Navigation_data$ref: FragmentReference;
 declare export opaque type Navigation_data$fragmentType: Navigation_data$ref;
 export type Navigation_data = {|
-  +localState: ?{|
-    +currentFoo: ?{|
-      +$fragmentRefs: MainNavigation_currentFoo$ref
-    |}
+  +node: ?{|
+    +$fragmentRefs: MainNavigation_currentFoo$ref
   |},
   +fooCount: ?{|
     +$fragmentRefs: MainNavigation_fooCount$ref
@@ -34,11 +32,40 @@ export type Navigation_data$key = {
 
 
 const node/*: ReaderFragment*/ = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "currentFooId",
+      "type": "ID!"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "Navigation_data",
   "selections": [
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "currentFooId"
+        }
+      ],
+      "concreteType": null,
+      "kind": "LinkedField",
+      "name": "node",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "MainNavigation_currentFoo"
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": "fooCount",
       "args": [
@@ -67,43 +94,11 @@ const node/*: ReaderFragment*/ = {
         }
       ],
       "storageKey": "entities(first:2,types:[\"FOO\"])"
-    },
-    {
-      "kind": "ClientExtension",
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LocalState",
-          "kind": "LinkedField",
-          "name": "localState",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Foo",
-              "kind": "LinkedField",
-              "name": "currentFoo",
-              "plural": false,
-              "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "MainNavigation_currentFoo"
-                }
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ]
     }
   ],
   "type": "Query"
 };
 // prettier-ignore
-(node/*: any*/).hash = 'ad10d1b9c243f7deb4d53cebb66b5bc9';
+(node/*: any*/).hash = '087f4d88725d2587f5dc1b665f7582b9';
 
 module.exports = node;
