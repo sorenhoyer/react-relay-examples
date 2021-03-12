@@ -49,7 +49,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "0.0.0-experimental-33c3af284",
     "react-app-polyfill": "^1.0.6",
-    "react-dev-utils": "^10.2.1",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "0.0.0-experimental-33c3af284",
     "react-relay": "0.0.0-experimental-895a6fe0",
     "relay-runtime": "^9.1.0",
